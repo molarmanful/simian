@@ -1,0 +1,10 @@
+.npmignore
+package.json
+package-lock.json
+README.md
+node_modules/
+tmp/
+
+testdata.js
+test.html
+test.js

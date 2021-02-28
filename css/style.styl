@@ -1,0 +1,164 @@
+BG = #202a25
+FG = #5f4bb6
+FG1 = #26f0f1
+FD = #86a5d9
+
+*
+  box-sizing border-box
+  scrollbar-width none
+
+  &::-webkit-scrollbar
+    width 0
+
+html, body
+  width 100%
+  height 100%
+  margin 0
+  font-family 'DM Sans', sans-serif
+  font-size 1rem
+  background-color BG
+  color FG
+
+[v-cloak]
+  display none !important
+
+*::placeholder
+  color BG
+  opacity 1
+  transition .1s all
+
+#app
+  width 100%
+  height 100%
+
+.screen
+  width 100%
+  height 100%
+  display flex
+  flex-flow column wrap
+  padding 1rem
+
+  .window
+    width 50%
+    padding 1rem
+    color FG
+    transition .1s all
+
+    .w-inner
+      width 100%
+      height 100%
+      border 1px solid FG
+      transition .1s all
+      position relative
+      display flex
+      flex-direction column
+
+      .title
+        width 100%
+        padding .5rem
+        font-weight bold
+        background-color FG
+        transition .1s all
+        color BG
+        position sticky
+        left 0
+        top 0
+
+      .content
+        flex 1
+        padding 1rem
+        overflow hidden
+        display flex
+        flex-direction column
+
+        .text
+          flex 1
+          white-space pre-wrap
+          overflow auto
+
+          &.flex
+            display flex
+            flex-direction column
+
+        input
+          flex 1
+          background none
+          border none
+          font inherit
+          color inherit
+          padding 0
+          outline none
+
+          &[type='file']
+            display none
+
+        button
+          background none
+          border 1px solid FG
+          font inherit
+          color inherit
+          padding .5rem
+          outline none
+          transition .1s all
+          cursor pointer
+
+        textarea
+          flex 1
+          background none
+          border 1px solid FG
+          resize none
+          font inherit
+          color inherit
+          padding .5rem
+          outline none
+          transition .1s all
+          margin-top 1rem
+          margin-bottom 1rem
+
+        .input-wrapper
+          display flex
+
+        .input-wrapper-chat
+          display flex
+          position sticky
+          bottom 0
+
+          input
+            padding .5rem
+            margin-top 1rem
+            border 1px solid FG
+            transition .1s all
+
+    &.active
+      color FG1
+
+      *::placeholder
+        color FD
+
+      .w-inner
+        border-color FG1
+
+        button, textarea
+          border-color FG1
+
+        .title
+          background-color FG1
+
+        .input-wrapper-chat input
+          border-color FG1
+
+  &.max
+
+    .active
+      width 100%
+      height 100%
+
+  .cmd, .data
+    height 50%
+
+  .chat
+    height 100%
+
+  .max
+    width 100%
+    height 100%

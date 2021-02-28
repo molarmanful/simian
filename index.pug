@@ -1,0 +1,41 @@
+doctype html
+html
+  head
+
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+
+    title LearnSim
+
+    link(rel='preconnect' href='https://fonts.gstatic.com')
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap')
+    link(rel='stylesheet' href='css/style.css')
+
+  body
+    #app
+      .screen(v-cloak :class='{max: max}')
+
+        os-window(:win='windows[0]' :active='active' @focus-window='focusWindow')
+          .text {{ cmdText }}
+            .input-wrapper
+              label > 
+              input(v-model='cmd' @keyup='bottom' @keyup.enter='submitCmd' spellcheck='false')
+
+        os-window(:win='windows[1]' :active='active' @focus-window='focusWindow')
+          .text.flex(@dragenter.prevent='' @dragover.prevent='' @drop.prevent='drop')
+            div
+              button(@click='preUpload') UPLOAD DATA
+            input(type='file' @change='upload')
+            textarea(v-model='dataText')
+            div
+              button(@click='submitDataText') SUBMIT AS TEXT
+              button(@click='submitDataDialogue') SUBMIT AS DIALOGUE
+
+        os-window(:win='windows[2]' :active='active' @focus-window='focusWindow')
+          .text {{ chatText }}
+          .input-wrapper-chat
+            input(v-model='msg' @keyup.enter='submitChat' placeholder='Type a message...')
+
+    script(src='https://unpkg.com/vue@next')
+    script(src='bower_components/fuzzysort/fuzzysort.js')
+    script(type='module' src='js/main.js')

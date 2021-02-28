@@ -1,0 +1,15 @@
+{
+  "name": "fuzzysort",
+  "homepage": "https://github.com/farzher/fuzzysort",
+  "version": "1.1.1",
+  "_release": "1.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.1",
+    "commit": "5bb5c7c4598aab7bad6663df321b0356a1ea7ff0"
+  },
+  "_source": "https://github.com/farzher/fuzzysort.git",
+  "_target": "^1.1.1",
+  "_originalSource": "farzher/fuzzysort",
+  "_direct": true
+}
