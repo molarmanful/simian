@@ -5,11 +5,13 @@ let rsum = seq=> seq.reduce((a, x)=> a + x.r, 0)
 
 export default class MRP {
 
-  constructor(name){
+  constructor(name, order=4){
     this.name = name
     this.chain = {}
     this.responses = {}
-    this.order = 4
+    this.order = order
+    this.nodes = new Set()
+    this.edges = []
   }
 
 
@@ -26,8 +28,31 @@ export default class MRP {
 
         let s = this.find(k, x)
         if(s) s.w++
-        else this.chain[k].push(new State(x, 1, 0))
+        else this.chain[k].push(s = new State(x, 1, 0))
+
+        let a = encodeURI(k)
+        let b = encodeURI(s.x)
+        this.pushEdge(a, b, s.w)
       }
+    }
+  }
+
+
+  pushEdge(a, b, w, n=1000){
+    if(!this.edges.find(x=> x.source == a && x.target == b)){
+      let i = this.edges.findIndex(x=> w >= x.weight)
+      if(~i || this.edges.length < n){
+        this.edges.splice(i, 0, {source: a, target: b, weight: w})
+        this.edges.splice(n)
+      }
+    }
+  }
+
+  updateNodes(){
+    this.nodes = new Set()
+    for(let e of this.edges){
+      this.nodes.add(e.source)
+      this.nodes.add(e.target)
     }
   }
 
@@ -51,9 +76,9 @@ export default class MRP {
 
   getNext(seq){
     seq = seq.slice(-this.order)
-    let res = fuzzysort.go(seq, Object.keys(this.chain))
-    if(res.length){
-      let target = rand(res.filter(r=> r.score == res[0].score)).target
+    let res = Object.keys(this.chain).filter(x=> seq.slice(-x.length) == x)
+    if(res){
+      let target = sortby(res, x=> x.length)[0]
       let ss = this.chain[target]
       let xs = []
       for(let s of ss) for(let _ in [...new Array(s.w)]) xs.push(s)
@@ -65,18 +90,21 @@ export default class MRP {
   getSeq(start){
     let next = this.getNext(start)
     if(next && next.x != '\n') return [next, ...this.getSeq(start + next.x)]
-    else return []
+    return []
   }
 
 
   getResponse(query){
-    let res = fuzzysort.go(query, Object.keys(this.responses))
-    if(res.length){
-      let target = rand(res.filter(r=> r.score == res[0].score)).target
-      let rs = this.responses[target]
-      let xs = []
-      for(let r of rs) for(let _ in [...new Array(r.w)]) xs.push(r)
-      return rand(xs)
+    let cands = Object.keys(this.responses)
+    if(cands.length){
+      let res = stringSimilarity.findBestMatch(query, cands)
+      if(res.bestMatch.rating > 0){
+        let target = res.bestMatch.target
+        let rs = this.responses[target]
+        let xs = []
+        for(let r of rs) for(let _ in [...new Array(r.w)]) xs.push(r)
+        return rand(xs)
+      }
     }
   }
 
@@ -104,5 +132,10 @@ class State {
 
   toString(){
     return this.x
+  }
+
+
+  toNode(){
+    return `${this.x} ${this.w} ${this.r}`
   }
 }

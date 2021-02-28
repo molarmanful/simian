@@ -5,7 +5,7 @@ html
     meta(charset='utf-8')
     meta(name='viewport' content='width=device-width, initial-scale=1')
 
-    title LearnSim
+    title SIMIAN
 
     link(rel='preconnect' href='https://fonts.gstatic.com')
     link(rel='stylesheet' href='https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap')
@@ -15,27 +15,35 @@ html
     #app
       .screen(v-cloak :class='{max: max}')
 
-        os-window(:win='windows[0]' :active='active' @focus-window='focusWindow')
+        os-window(:win='windows[0]' :active='active' :max='max' @focus-window='focusWindow' @max-window='maxWindow')
           .text {{ cmdText }}
             .input-wrapper
               label > 
               input(v-model='cmd' @keyup='bottom' @keyup.enter='submitCmd' spellcheck='false')
 
-        os-window(:win='windows[1]' :active='active' @focus-window='focusWindow')
+        os-window(:win='windows[1]' :active='active' :max='max' @focus-window='focusWindow' @max-window='maxWindow')
           .text.flex(@dragenter.prevent='' @dragover.prevent='' @drop.prevent='drop')
             div
               button(@click='preUpload') UPLOAD DATA
             input(type='file' @change='upload')
-            textarea(v-model='dataText')
-            div
-              button(@click='submitDataText') SUBMIT AS TEXT
-              button(@click='submitDataDialogue') SUBMIT AS DIALOGUE
+            textarea(v-model='dataText' placeholder='Type text...')
+            div(align='right')
+              button(@click='submitDataText') GIVE AS TEXT
+              span.spacer
+              button(@click='submitDataDialogue') GIVE AS DIALOGUE
 
-        os-window(:win='windows[2]' :active='active' @focus-window='focusWindow')
+        os-window(:win='windows[2]' :active='active' :max='max' @focus-window='focusWindow' @max-window='maxWindow')
           .text {{ chatText }}
           .input-wrapper-chat
-            input(v-model='msg' @keyup.enter='submitChat' placeholder='Type a message...')
+            input(v-model='msg' @keyup.enter='submitChat' :placeholder='responding ? "SIM is thinking..." : "Type a message..."' :disabled='responding')
+
+        os-window(:win='windows[3]' :active='active' :max='max' @focus-window='focusWindow' @max-window='maxWindow')
+          .graph
 
     script(src='https://unpkg.com/vue@next')
-    script(src='bower_components/fuzzysort/fuzzysort.js')
+    script(src='https://unpkg.com/string-similarity/umd/string-similarity.min.js')
+    script(src='bower_components/cytoscape/dist/cytoscape.min.js')
+    script(src='bower_components/layout-base/layout-base.js')
+    script(src='bower_components/cose-base/cose-base.js')
+    script(src='bower_components/cytoscape-cose-bilkent/cytoscape-cose-bilkent.js')
     script(type='module' src='js/main.js')

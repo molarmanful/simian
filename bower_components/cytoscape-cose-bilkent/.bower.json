@@ -1,0 +1,37 @@
+{
+  "name": "cytoscape-cose-bilkent",
+  "description": "The CoSE layout for Cytoscape.js by Bilkent with enhanced compound node placement",
+  "main": "cytoscape-cose-bilkent.js",
+  "dependencies": {
+    "cytoscape": "^3.2.0",
+    "cose-base": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cytoscape/cytoscape.js-cose-bilkent.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "keywords": [
+    "cytoscape",
+    "cytoscape-extension"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/cytoscape/cytoscape.js-cose-bilkent",
+  "version": "4.1.0",
+  "_release": "4.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v4.1.0",
+    "commit": "f55a6f5841a7f5735825da981ea80bb9b9baee92"
+  },
+  "_source": "https://github.com/cytoscape/cytoscape.js-cose-bilkent.git",
+  "_target": "^4.1.0",
+  "_originalSource": "cytoscape-cose-bilkent",
+  "_direct": true
+}
