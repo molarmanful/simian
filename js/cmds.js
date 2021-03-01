@@ -31,6 +31,7 @@ let cmds = {
       }).then(_=>{
         ctx.cmdText += `Brain state saved to "${name}".\n`
       }).catch(e=>{
+        console.log(e)
         ctx.cmdText += `Brain state unable to be saved, out of memory!\n`
       })
     }
@@ -42,10 +43,10 @@ let cmds = {
   load(ctx, args, mrp, db){
     if(args.length){
       let name = args[0]
-      db.brains.get(name).then(item=>{
-        if(item){
+      db.brains.get(name).then(brain=>{
+        if(brain){
           ctx.cmdText += `Loading brain state "${name}"...\n`
-          let {chain, responses, edges} = JSON.parse(localStorage.getItem(name))
+          let {chain, responses, edges} = brain
           mrp.edges = edges
 
           for(let k in chain){
@@ -62,6 +63,8 @@ let cmds = {
         else {
           ctx.cmdText += `Brain state "${name}" not found. Type "list" to see a list of saved brain states.\n`
         }
+      }).catch(e=>{
+        console.log(e)
       })
     }
     else {
