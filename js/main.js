@@ -146,7 +146,6 @@ const OS = {
     submitDataDialogue(){
       if(this.dataText){
         let dialogue = this.dataText.split(/\n\s*/)
-        console.log(dialogue)
         setTimeout(_=>{
           let c = 0
           for(let i in dialogue){
