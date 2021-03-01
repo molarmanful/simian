@@ -149,7 +149,7 @@ const OS = {
         setTimeout(_=>{
           let c = 0
           for(let i in dialogue){
-            if(++c % 1e6 == 0) console.log(c)
+            if(++c % 5e4 == 0) console.log(c)
 
             i = i.replace(/\s+/g, ' ')
             if(i){
