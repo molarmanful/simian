@@ -106,7 +106,7 @@ let cmds = {
   },
 
   echo(ctx, args){
-    ctx.cmdText += arg[0]
+    ctx.cmdText += args[0]
   }
 }
 
