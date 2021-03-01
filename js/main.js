@@ -180,7 +180,7 @@ const OS = {
 
           setTimeout(_=>{
             let response = mrp.respond(msg)
-            if(response) this.chatText += `SIM: ${response}\n`
+            if(response) this.chatText += `SIM: ${response.replace(/\n/g, '')}\n`
             else {
               let start = msg.slice(0, mrp.order)
               this.chatText += `SIM: ${response = start + mrp.getSeq(start).map(s=> s.x).join``}\n`
