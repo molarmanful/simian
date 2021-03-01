@@ -15,7 +15,7 @@ Opens the GitHub repository.
 Shows a list of saved brain states.
 
 > save [name]
-Saves current brain state to local storage. This data will be saved across browser sessions.
+Saves current brain state to local storage. This data will persist across browser sessions.
 
 > load [name]
 Loads brain state from local storage.
