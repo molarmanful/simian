@@ -21,12 +21,17 @@ let cmds = {
   save(ctx, args, mrp){
     if(args.length){
       let name = args[0]
-      localStorage.setItem(name, JSON.stringify({
-        chain: mrp.chain,
-        responses: mrp.responses,
-        edges: mrp.edges
-      }))
-      ctx.cmdText += `Brain state saved to "${name}".`
+      try {
+        localStorage.setItem(name, JSON.stringify({
+          chain: mrp.chain,
+          responses: mrp.responses,
+          edges: mrp.edges
+        }))
+        ctx.cmdText += `Brain state saved to "${name}".`
+      }
+      catch(e){
+        ctx.cmdText += `Brain state unable to be saved, brain is too large.`
+      }
     }
     else {
       ctx.cmdText += 'Please provide a name.'
