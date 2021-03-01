@@ -137,29 +137,27 @@ const OS = {
         setTimeout(_=>{
           mrp.addSeq(text)
           this.updateGraph()
-        })
 
-        this.dataText = ''
+          this.dataText = ''
+        })
       }
     },
 
     submitDataDialogue(){
       if(this.dataText){
-        let dialogue = this.dataText.split(/\n(?:\s+)?/).map(a=>
-          a.replace(/\s+/g, ' ')
-        ).filter(a=> a)
-
+        let dialogue = this.dataText.split(/\n\s+?/)
         setTimeout(_=>{
           for(let i in dialogue){
-            let [a, b] = [dialogue[i], dialogue[i + 1]]
-            if(b){
-              mrp.addDialogue(a, b)
+            i = i.replace(/\s+/g, ' ')
+            if(i){
+              let [a, b] = [dialogue[i], dialogue[i + 1]]
+              if(b) mrp.addDialogue(a, b)
             }
           }
-          this.updateGraph()
-        })
 
-        this.dataText = ''
+          this.updateGraph()
+          this.dataText = ''
+        })
       }
     },
 
