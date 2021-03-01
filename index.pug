@@ -19,7 +19,7 @@ html
           .text {{ cmdText }}
             .input-wrapper
               label > 
-              input(v-model='cmd' @keyup='bottom' @keyup.enter='submitCmd' spellcheck='false')
+              input(v-model='cmd' @keyup='bottom($event.target)' @keyup.enter='submitCmd' spellcheck='false')
 
         os-window(:win='windows[1]' :active='active' :max='max' @focus-window='focusWindow' @max-window='maxWindow')
           .text.flex(@dragenter.prevent='' @dragover.prevent='' @drop.prevent='drop')

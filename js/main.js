@@ -1,4 +1,6 @@
 import MRP from './mrp.js'
+import cmds from './cmds.js'
+import chat_cmds from './chat_cmds.js'
 
 const randint = (a, b)=> Math.random() * (b - a + 1) | 0 + a
 const mrp = new MRP()
@@ -10,9 +12,11 @@ const OS = {
       active: 0,
       max: false,
       cmd: '',
-      cmdText: '',
+      cmdText: 'SIMIAN v0.0.1\nType "help" for a manual.\n\n',
       dataText: '',
       msg: '',
+      lastMsg: '',
+      lastResponse: '',
       chatText: '',
       responding: false,
       windows: [
@@ -26,17 +30,11 @@ const OS = {
 
   watch: {
     cmdText(){
-      setTimeout(_=>{
-        let active = document.querySelector('.active')
-        active.scrollTop = active.scrollHeight
-      })
+      this.bottom(document.querySelector('.active input, .active textarea'))
     },
 
     chatText(){
-      setTimeout(_=>{
-        let active = document.querySelector('.active')
-        active.scrollTop = active.scrollHeight
-      })
+      this.bottom(document.querySelector('.active input, .active textarea'))
     },
 
     responding(){
@@ -84,13 +82,28 @@ const OS = {
       this.max = !this.max
     },
 
-    bottom(e){
-      let parent = e.target.closest('.window').querySelector('.text')
-      parent.scrollTop = parent.scrollHeight
+    bottom(el){
+      setTimeout(_=>{
+        let parent = el.closest('.window').querySelector('.text')
+        parent.scrollTop = parent.scrollHeight
+      })
     },
 
     submitCmd(){
       this.cmdText += `> ${this.cmd}\n`
+      let parsed = this.cmd.replace(/^\s+/, '').split(/\s+/)
+
+      if(parsed[0]){
+        let query = parsed[0].toLowerCase()
+        if(cmds[query]){
+          cmds[query](this, parsed.slice(1))
+        }
+        else {
+          this.cmdText += `Command '${query}' not found. Type 'help' for a manual.`
+        }
+      }
+
+      this.cmdText += '\n'
       this.cmd = ''
     },
 
@@ -116,65 +129,77 @@ const OS = {
 
     submitDataText(){
       if(this.dataText){
-        let text = this.dataText.split(/\n+/).map(a=>
+        let text = this.dataText.split(/\n(?:\s+)?/).map(a=>
           a.replace(/\s+/g, ' ')
         )
 
-        for(let l of text) mrp.addSeq(l)
+        setTimeout(_=>{
+          for(let l of text) mrp.addSeq(l)
+          this.updateGraph()
+        })
 
         this.dataText = ''
-        this.updateGraph()
       }
     },
 
     submitDataDialogue(){
       if(this.dataText){
-        let dialogue = this.dataText.split(/\n+/).map(a=>
-          a.replace(/^.+[.:]\s+/g, '').replace(/\s+/g, ' ')
+        let dialogue = this.dataText.split(/\n(?:\s+)?/).map(a=>
+          a.replace(/\s+/g, ' ')
         ).filter(a=> a)
 
-        for(let i in dialogue){
-          let [a, b] = dialogue.slice(i)
-          if(b){
-            mrp.addDialogue(a, b)
+        setTimeout(_=>{
+          for(let i in dialogue){
+            let [a, b] = dialogue.slice(i)
+            if(b){
+              mrp.addDialogue(a, b)
+            }
           }
-        }
+          this.updateGraph()
+        })
 
         this.dataText = ''
-        this.updateGraph()
       }
     },
 
     submitChat(){
-      let msg = this.msg
-      this.chatText += `USER: ${msg}\n`
-      mrp.addSeq(msg)
-      this.responding = true
+      if(this.msg.replace(/\s+/g, '')){
+        let msg = this.msg
+        this.chatText += `USER: ${msg}\n`
 
-      setTimeout(_=>{
-        let response = mrp.respond(msg)
-        if(response) this.chatText += `SIM: ${response}\n`
-        this.responding = false
-      }, randint(100, 500))
+        if(this.msg[0] == '/'){
+          let parsed = this.msg.slice(1).toLowerCase().split(/\s+(.*)/)
+          if(chat_cmds[parsed[0]]) chat_cmds[parsed[0]](this, mrp, parsed[1])
+        }
 
-      this.msg = ''
+        else {
+          mrp.addSeq(msg)
+          this.responding = true
+
+          setTimeout(_=>{
+            let response = mrp.respond(msg)
+            if(response) this.chatText += `SIM: ${response}\n`
+            else {
+              let start = msg.slice(0, mrp.order)
+              this.chatText += `SIM: ${response = start + mrp.getSeq(start).map(s=> s.x).join``}\n`
+            }
+            this.responding = false
+            this.lastResponse = response
+          }, randint(100, 500))
+
+          this.lastMsg = this.msg
+        }
+        this.msg = ''
+      }
     },
 
     updateGraph(){
       mrp.updateNodes()
       cy.elements().remove()
 
-      for(let x of mrp.nodes){
-        if(cy.$id(x).empty()){
-          cy.add({data: {id: x}})
-        }
-      }
-
-      for(let e of mrp.edges){
-        cy.add({data: e})
-      }
-
       setTimeout(_=>{
+        cy.add([...mrp.nodes].map(x=> ({data: {id: x}})))
+        cy.add(mrp.edges.map(e=> ({data: e})))
         cy.layout({name: 'cose-bilkent'}).run()
       })
     }

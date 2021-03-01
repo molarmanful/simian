@@ -19,16 +19,20 @@ export default class MRP {
     return this.chain[k].find(a=> a.x == x)
   }
 
+  findResponse(k, x){
+    return this.responses[k].find(a=> a.x == x)
+  }
 
-  add(key, x){
+
+  add(key, x, reward=0){
     for(let i in key){
       let k = key.slice(i)
       if(k.length){
         if(!this.chain[k]) this.chain[k] = []
 
         let s = this.find(k, x)
-        if(s) s.w++
-        else this.chain[k].push(s = new State(x, 1, 0))
+        if(s) s.w++, s.r += reward
+        else this.chain[k].push(s = new State(x, 1, reward))
 
         let a = encodeURI(k)
         let b = encodeURI(s.x)
@@ -57,20 +61,24 @@ export default class MRP {
   }
 
 
-  addSeq(seq){
+  addSeq(seq, reward=0){
     seq = seq.concat('\n')
     for(let i in seq){
       let k = seq.slice(Math.max(0, i - this.order), i)
-      this.add(k, seq[i])
+      this.add(k, seq[i], reward)
     }
   }
 
 
-  addDialogue(query, response){
+  addDialogue(query, response, reward=0){
     if(!this.responses[query]) this.responses[query] = []
-    this.responses[query].push(new State(response, 1, 0))
-    this.addSeq(query)
-    this.addSeq(response)
+
+    let s = this.findResponse(query, response)
+    if(s) s.w++, s.r += reward
+    else this.responses[query].push(new State(response, 1, reward))
+
+    this.addSeq(query, 1)
+    this.addSeq(response, reward)
   }
 
 
@@ -89,8 +97,8 @@ export default class MRP {
 
   getSeq(start){
     let next = this.getNext(start)
-    if(next && next.x != '\n') return [next, ...this.getSeq(start + next.x)]
-    return []
+    if(next && !next.x.match(/[\n.?!]/)) return [next, ...this.getSeq(start + next.x)]
+    return next && next.x != '\n' ? [next] : []
   }
 
 
