@@ -2,7 +2,20 @@
 
 ## (Somewhat Interesting Machine with Intelligence of Artificial Nature)
 
-A chatbot that learns from scratch -- with your help!
+A chatbot that *you* get to teach!
+
+```
+USER: hello
+SIM: hell ye that shephew inside do you suggestimore thing them
+USER: no I don't suggestimore anything
+SIM: There's get my some up a trying to called Joan what three big beans where goes oh aye one mat out YOU mostly on as a vision Oklahomas.
+USER: what's your vision of oklahomas?
+SIM: Gimmer, my land it and the because me.
+USER: what's gimmer?
+SIM: Gimmer to exting for your lid
+USER: that was insulting, I'm insulted
+SIM: Yes
+```
 
 Made as a final project for Software Art: Text - Spring 2021.
 

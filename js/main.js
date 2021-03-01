@@ -145,7 +145,8 @@ const OS = {
 
     submitDataDialogue(){
       if(this.dataText){
-        let dialogue = this.dataText.split(/\n\s+?/)
+        let dialogue = this.dataText.split(/\n\s*/)
+        console.log(dialogue)
         setTimeout(_=>{
           let c = 0
           for(let i in dialogue){
@@ -180,7 +181,7 @@ const OS = {
 
           setTimeout(_=>{
             let response = mrp.respond(msg)
-            if(response) this.chatText += `SIM: ${response.replace(/\n/g, '')}\n`
+            if(response) this.chatText += `SIM: ${response}\n`
             else {
               let start = msg.slice(0, mrp.order)
               this.chatText += `SIM: ${response = start + mrp.getSeq(start).map(s=> s.x).join``}\n`
