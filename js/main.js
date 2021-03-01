@@ -129,12 +129,9 @@ const OS = {
 
     submitDataText(){
       if(this.dataText){
-        let text = this.dataText.split(/\n(?:\s+)?/).map(a=>
-          a.replace(/\s+/g, ' ')
-        )
-
+        let text = this.dataText.replace(/\s+/g, ' ')
         setTimeout(_=>{
-          for(let l of text) mrp.addSeq(l)
+          mrp.addSeq(text)
           this.updateGraph()
         })
 
