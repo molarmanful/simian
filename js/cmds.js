@@ -22,9 +22,9 @@ let cmds = {
     if(args.length){
       let name = args[0]
       localStorage.setItem(name, JSON.stringify({
-        chain: JSON.stringify(mrp.chain),
-        responses: JSON.stringify(mrp.responses),
-        edges: JSON.stringify(mrp.edges)
+        chain: mrp.chain,
+        responses: mrp.responses,
+        edges: mrp.edges
       }))
       ctx.cmdText += `Brain state saved to "${name}".`
     }
@@ -38,10 +38,8 @@ let cmds = {
       let name = args[0]
       if(name in localStorage){
         ctx.cmdText += `Loading brain state "${name}"...\n`
-        let parsed = JSON.parse(localStorage.getItem(name))
-        let chain = JSON.parse(parsed.chain)
-        let responses = JSON.parse(parsed.responses)
-        mrp.edges = JSON.parse(parsed.edges)
+        let {chain, responses, edges} = JSON.parse(localStorage.getItem(name))
+        mrp.edges = edges
 
         for(let k in chain){
           mrp.chain[k] = chain[k].map(s=> new mrp.State(s.x, s.w, s.r))
@@ -63,7 +61,7 @@ let cmds = {
     }
   },
 
-  remove(ctx, args, mrp){
+  remove(ctx, args){
     if(args.length){
       let name = args[0]
       if(name in localStorage){
@@ -87,6 +85,11 @@ let cmds = {
     else {
       ctx.cmdText += 'If you wish to remove ALL brain states, type "clear 1" to confirm.'
     }
+  },
+
+  graph(ctx){
+    ctx.updateGraph()
+    ctx.cmdText += 'Graph updated.'
   },
 
   hi(ctx){
