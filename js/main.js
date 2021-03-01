@@ -5,7 +5,6 @@ import chat_cmds from './chat_cmds.js'
 const randint = (a, b)=> Math.random() * (b - a + 1) | 0 + a
 const mrp = new MRP()
 const db = new Dexie('brains', {autoOpen: true})
-window.db = db
 let cy
 
 const OS = {
