@@ -4,6 +4,8 @@ import chat_cmds from './chat_cmds.js'
 
 const randint = (a, b)=> Math.random() * (b - a + 1) | 0 + a
 const mrp = new MRP()
+const db = new Dexie('brains', {autoOpen: true})
+window.db = db
 let cy
 
 const OS = {
@@ -66,6 +68,10 @@ const OS = {
         }
       ]
     })
+
+    db.version(1).stores({
+      brains: 'name, chain, responses, edges'
+    })
   },
 
   methods: {
@@ -96,14 +102,13 @@ const OS = {
       if(parsed[0]){
         let query = parsed[0].toLowerCase()
         if(cmds[query]){
-          cmds[query](this, parsed.slice(1), mrp)
+          cmds[query](this, parsed.slice(1), mrp, db)
         }
         else {
           this.cmdText += `Command '${query}' not found. Type 'help' for a manual.`
         }
       }
 
-      this.cmdText += '\n'
       this.cmd = ''
     },
 
