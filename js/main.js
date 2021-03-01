@@ -151,7 +151,7 @@ const OS = {
 
         setTimeout(_=>{
           for(let i in dialogue){
-            let [a, b] = dialogue.slice(i)
+            let [a, b] = [dialogue[i], dialogue[i + 1]]
             if(b){
               mrp.addDialogue(a, b)
             }
