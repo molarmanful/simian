@@ -147,7 +147,10 @@ const OS = {
       if(this.dataText){
         let dialogue = this.dataText.split(/\n\s+?/)
         setTimeout(_=>{
+          let c = 0
           for(let i in dialogue){
+            if(++c % 1e6 == 0) console.log(c)
+
             i = i.replace(/\s+/g, ' ')
             if(i){
               let [a, b] = [dialogue[i], dialogue[i + 1]]
