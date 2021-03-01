@@ -96,7 +96,7 @@ const OS = {
       if(parsed[0]){
         let query = parsed[0].toLowerCase()
         if(cmds[query]){
-          cmds[query](this, parsed.slice(1))
+          cmds[query](this, parsed.slice(1), mrp)
         }
         else {
           this.cmdText += `Command '${query}' not found. Type 'help' for a manual.`

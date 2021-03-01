@@ -10,6 +10,21 @@ Opens this manual.
 
 > src
 Opens the GitHub repository.
+
+> list
+Shows a list of saved brain states.
+
+> save [name]
+Saves current brain state to local storage. This data will be saved across browser sessions.
+
+> load [name]
+Loads brain state from local storage.
+
+> remove [name]
+Removes brain state from local storage.
+
+> clear
+Removes all brain states from local storage.
 ```
 
 ## DATA INPUT

@@ -12,6 +12,7 @@ export default class MRP {
     this.order = order
     this.nodes = new Set()
     this.edges = []
+    this.State = State
   }
 
 
@@ -140,10 +141,5 @@ class State {
 
   toString(){
     return this.x
-  }
-
-
-  toNode(){
-    return `${this.x} ${this.w} ${this.r}`
   }
 }
