@@ -1,13 +1,23 @@
+// MODULE IMPORTS
+
 import MRP from './mrp.js'
 import cmds from './cmds.js'
 import chat_cmds from './chat_cmds.js'
+
+// HELPERS
 
 const randint = (a, b)=> Math.random() * (b - a + 1) | 0 + a
 const mrp = new MRP()
 const db = new Dexie('brains', {autoOpen: true})
 let cy
 
+// VUE PARENT APP
+
 const OS = {
+
+  // NOTABLE PROPERTIES
+  // responding: turns off messaging while SIMIAN is thinking
+
   data(){
     return {
       active: 0,
@@ -30,14 +40,18 @@ const OS = {
   },
 
   watch: {
+
+    // scrolls terminal to bottom of text log
     cmdText(){
       this.bottom(document.querySelector('.active input, .active textarea'))
     },
 
+    // scrolls chat to bottom of text log
     chatText(){
       this.bottom(document.querySelector('.active input, .active textarea'))
     },
 
+    // focuses input after bot responds
     responding(){
       setTimeout(_=>{
         this.focusInput()
@@ -46,6 +60,8 @@ const OS = {
   },
 
   mounted(){
+
+    // inits graph
     cy = cytoscape({
       container: document.querySelector('.graph'),
       style: [
@@ -68,24 +84,38 @@ const OS = {
       ]
     })
 
+    // inits indexeddb
     db.version(1).stores({
       brains: 'name, chain, responses, edges'
     })
   },
 
   methods: {
+
+    // focusWindow(Number)
+    // Changes active window.
+
     focusWindow(n){
       this.active = n
     },
+
+    // focusInput()
+    // Focuses input in current window.
 
     focusInput(){
       let input = this.$el.querySelector('.active input:not([type="file"]), .active textarea')
       if(input) input.focus()
     },
 
+    // maxWindow()
+    // Maximizes window (after `dblclick` event).
+
     maxWindow(){
       this.max = !this.max
     },
+
+    // bottom(Element)
+    // Scrolls `.text` elements to the bottom (like a chatbox).
 
     bottom(el){
       setTimeout(_=>{
@@ -93,6 +123,10 @@ const OS = {
         parent.scrollTop = parent.scrollHeight
       })
     },
+
+    // submitCmd()
+    // Parses and interprets command line.
+    // SEE `cmd.js` for commands.
 
     submitCmd(){
       this.cmdText += `> ${this.cmd}\n`
@@ -111,17 +145,29 @@ const OS = {
       this.cmd = ''
     },
 
+    // drop(Event)
+    // Handles `drop` event for files.
+
     drop(e){
       this.handleFile(e.dataTransfer.files[0])
     },
+
+    // preUpload(Event)
+    // Passes click from button to hidden `file` input.
 
     preUpload(e){
       e.target.closest('.text').querySelector('input[type="file"]').click()
     },
 
+    // upload(Event)
+    // Handles `file` input receiving data.
+
     upload(e){
       if(e.target.files.length) this.handleFile(e.target.files[0])
     },
+
+    // handleFile(File)
+    // Reads file (e.g. from `file` input).
 
     handleFile(file){
       const fr = new FileReader()
@@ -130,6 +176,9 @@ const OS = {
         this.dataText = fr.result
       }
     },
+
+    // submitDataText()
+    // Adds uploaded data to sentence MRP.
 
     submitDataText(){
       if(this.dataText){
@@ -143,12 +192,16 @@ const OS = {
       }
     },
 
+    // submitDataText()
+    // Adds uploaded data to responses MRP.
+
     submitDataDialogue(){
       if(this.dataText){
         let dialogue = this.dataText.split(/\n\s*/)
         setTimeout(_=>{
           let c = 0
           for(let i in dialogue){
+            // debug msg's for bigger data
             if(++c % 5e4 == 0) console.log(c)
 
             i = i.replace(/\s+/g, ' ')
@@ -164,11 +217,15 @@ const OS = {
       }
     },
 
+    // submitChat()
+    // Sends + displays user message, then sends + displays bot response.
+
     submitChat(){
       if(this.msg.replace(/\s+/g, '')){
         let msg = this.msg
         this.chatText += `USER: ${msg}\n`
 
+        // SEE `chat_cmds.js` for chat commands.
         if(this.msg[0] == '/'){
           let parsed = this.msg.slice(1).toLowerCase().split(/\s+(.*)/)
           if(chat_cmds[parsed[0]]) chat_cmds[parsed[0]](this, mrp, parsed[1])
@@ -195,6 +252,10 @@ const OS = {
       }
     },
 
+    // updateGraph()
+    // Refreshes graph representation of brain.
+    // Shows most frequent `n=1000` edges and corresponding nodes.
+
     updateGraph(){
       mrp.updateNodes()
       cy.elements().remove()
@@ -209,6 +270,10 @@ const OS = {
 }
 
 const app = Vue.createApp(OS)
+
+// WINDOW COMPONENT
+// window --(event)--> parent
+// window <--(props)-- parent
 
 app.component('os-window', {
   props: ['win', 'active', 'max'],
@@ -233,12 +298,19 @@ app.component('os-window', {
   },
 
   methods: {
+
+    // focusWindow(Number)
+    // Sends `focus-window` event to parent.
+
     focusWindow(n){
       if(this.win.n == n){
         this.$emit('focusWindow', n)
         this.focusInput()
       }
     },
+
+    // focusInput()
+    // Focuses input in current window.
 
     focusInput(){
       let input = this.$el.querySelector('input:not([type="file"]), textarea')

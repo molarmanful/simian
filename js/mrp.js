@@ -1,3 +1,5 @@
+// HELPERS
+
 let rand = x=> x[0 | Math.random() * x.length]
 let sortby = (xs, f)=> xs.slice().sort((a, b)=> f(b) - f(a))
 let rsum = seq=> seq.reduce((a, x)=> a + x.r, 0)
