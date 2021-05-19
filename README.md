@@ -1,4 +1,4 @@
-# [SIMIAN](https://bennyboy.tech/learnsim)
+# [SIMIAN](https://bennyboy.tech/simian)
 
 ## (Somewhat Interesting Machine with Intelligence of Artificial Nature)
 
